@@ -39,14 +39,17 @@ def find_music_files(base_dir):
 
 def generate_liq(music_list, output_file):
     """Gera radio.liq para Liquidsoap"""
+    playlist_file = "/radio/playlist.m3u"
+    # cria arquivo M3U
+    with open(playlist_file, "w", encoding="utf-8") as p:
+        for path in music_list:
+            p.write(path.replace("\\", "/") + "\n")
+
     with open(output_file, "w", encoding="utf-8") as f:
         f.write("# Auto-gerado\n")
-        f.write('set("allow_root", true)\n')
-        f.write("radio = fallback([\n")
-        for path in music_list:
-            path_escaped = path.replace("\\", "/")
-            f.write(f'  single("{path_escaped}"),\n')
-        f.write("])\n\n")
+        f.write('set("allow_root", true)\n\n')
+        f.write(f'playlist_source = playlist("{playlist_file}", mode="random")\n')
+        f.write("radio = fallback([playlist_source, blank(duration=0.5)])\n\n")
         f.write(f"""output.icecast(
   %mp3,
   host = "{ICECAST_HOST}",
@@ -56,7 +59,6 @@ def generate_liq(music_list, output_file):
   name = "{RADIO_NAME}",
   radio
 )\n""")
-
 # ===============================
 # Execução
 # ===============================
