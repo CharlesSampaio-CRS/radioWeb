@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RadioBairro</title>
+<title>M.Radio</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
   body {
@@ -14,6 +14,55 @@
     overflow: hidden;
   }
 
+  .logo {
+  font-size: 3rem;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Notas musicais animadas */
+.note {
+  display: inline-block;
+  animation: bounce 1.5s infinite;
+}
+.note:nth-child(1) { animation-delay: 0s; }
+.note:nth-child(2) { animation-delay: 0.2s; }
+.note:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Estilo do "M." */
+.logo .brand {
+  font-weight: bold;
+  font-size: 3.5rem;
+  background: linear-gradient(45deg, #ff6ec4, #7873f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+
+/* Estilo do "Radio" */
+.logo .radio-text {
+  font-weight: bold;
+  background: linear-gradient(45deg, #00f2fe, #4facfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(79,172,254,0.6);
+}
+.logo span:nth-child(1) { animation-delay: 0s; }
+.logo span:nth-child(2) { animation-delay: 0.2s; }
+.logo span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
   /* Sidebar */
   .sidebar {
     width: 80px;
@@ -167,12 +216,28 @@
     .volume-control { font-size: 1.5rem; } /* Ícone grande também no mobile */
   }
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6c63ff">
+
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("Service Worker registrado ✅"))
+      .catch(err => console.log("Erro SW:", err));
+  }
+</script>
 </head>
 <body>
   
   <div class="container">
-    <h1>🎵 RadioBairro</h1>
-    <p>O melhor som da sua vizinhança!</p>
+    <h1 class="logo">
+      <span class="note">🎵</span>
+      <span class="note">🎶</span>
+      <span class="note">🎼</span>
+      <span class="brand">M.</span> 
+      <span class="radio-text">Radio</span>
+    </h1>
+    <p>O Melhor da musica no seu dia!</p>
 
     <div class="player">
       <button id="playPauseBtn">
@@ -199,7 +264,7 @@
     </div>
   </div>
 
-  <audio id="radio" src="http://localhost:8000/mix"></audio>
+  <audio id="radio" src="http://localhost:8000/stream"></audio>
 
 <script>
 const radio = document.getElementById('radio');
